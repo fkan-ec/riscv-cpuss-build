@@ -1,0 +1,28 @@
+This file describes the steps for building CPUSS images.
+
+1) Setup environment
+export RISCV=<toolchain-dir>/riscv64
+
+2) Clone riscv-cpuss-build
+git clone --recursive https://github.com/fkan-ec/riscv-cpuss-build
+
+3) Copy cpuss patch tar
+cd riscv-cpuss-build
+cp riscv_cpuss_patch_1.0.0.tgz .
+tar xzf riscv_cpuss_patch_1.0.0.tgz
+
+4) Apply patches
+make apply_patch
+
+5) Build
+
+5a) Default for Xilinx FPGA
+make all
+
+5b) For AWS FPGA
+make BUILD_TARGET=AWS_FPGA all
+
+Two files are created in fit_image directory:
+
+fw_payload.bin  -- Binary for opensbi and u-boot
+image_xlinx.itb -- FIT image for kernel, fs and dts

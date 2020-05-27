@@ -1,0 +1,56 @@
+/dts-v1/;
+  
+/ {
+    description = "U-Boot fitImage";
+    #address-cells = <2>;
+  
+    images {
+        kernel@0 {
+            description = "Linux Kernel";
+            data = /incbin/("./Image");
+            type = "kernel";
+            arch = "riscv";
+            os = "linux";
+            compression = "none";
+            load = <0x4 0x04000000>;
+            entry = <0x4 0x04000000>;
+            hash@1 {
+                algo = "sha1";
+            };
+        };
+        fdt@0 {
+            description = "Device Tree blob";
+            data = /incbin/("./ec_raptorawsfpga.dtb");
+            type = "flat_dt";
+            arch = "riscv";
+            compression = "none";
+            hash@1 {
+                algo = "sha1";
+            };
+        };
+        ramdisk@0 {
+            description = "ramdisk";
+            data = /incbin/("./rootfs.cpio.gz");
+            type = "ramdisk";
+            arch = "riscv";
+            os = "linux";
+            compression = "none";
+            load = <0x4 0x05000000>;
+            hash@1 {
+                algo = "sha1";
+            };
+        };
+    };
+    configurations {
+        default = "conf@1";
+        conf@1 {
+            description = "Boot Linux kernel with FDT blob + ramdisk";
+            kernel = "kernel@0";
+            fdt = "fdt@0";
+            ramdisk = "ramdisk@0";
+            hash@1 {
+                algo = "sha1";
+            };
+        };
+    };
+};
